@@ -101,7 +101,7 @@ export default function Student() {
         </div>
 
         <a
-          href="/login"
+          href="/?page=login"
           className="bg-blue-600 hover:bg-blue-700 px-5 py-3 rounded-xl font-bold transition"
         >
           Espace Prof
