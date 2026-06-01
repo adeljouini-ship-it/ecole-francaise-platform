@@ -4,9 +4,10 @@ import Student from "./Student";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
-  const path = window.location.pathname;
+  const params = new URLSearchParams(window.location.search);
+  const page = params.get("page");
 
-  if (path === "/admin") {
+  if (page === "admin") {
     return (
       <ProtectedRoute>
         <Admin />
@@ -14,7 +15,7 @@ function App() {
     );
   }
 
-  if (path === "/login") {
+  if (page === "login") {
     return <Login />;
   }
 
