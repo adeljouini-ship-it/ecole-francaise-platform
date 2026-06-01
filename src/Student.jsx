@@ -3,27 +3,24 @@ import logo from "./assets/logo.png";
 import { supabase } from "./supabase";
 
 const data = {
-  "1ère Année": {
-    Mathématiques: "1ere",
+  "5ème": {
+    Général: "5eme",
   },
-  "2ème Année": {
-    Sciences: "2eme",
-    Informatique: "2eme",
-    "Économie & Gestion": "2eme",
+
+  "4ème": {
+    Général: "4eme",
   },
-  "3ème Année": {
-    Sciences: "3eme",
-    Mathématiques: "3eme",
-    Informatique: "3eme",
-    "Économie & Gestion": "3eme",
-    Technique: "3eme",
+
+  "3ème": {
+    Général: "3eme",
   },
-  Bac: {
-    Mathématiques: "bac",
-    Sciences: "bac",
-    Informatique: "bac",
-    "Économie & Gestion": "bac",
-    Technique: "bac",
+
+  "1ère": {
+    Général: "1ere",
+  },
+
+  "Terminale": {
+    Général: "terminale",
   },
 };
 
@@ -148,7 +145,7 @@ export default function Student() {
   </p>
 
   <p className="text-xl">
-    <strong>Lycée :</strong> Lycée Farhat Hached Radès
+    <strong>École :</strong> École Française
   </p>
 </div>
           </section>
@@ -190,8 +187,12 @@ export default function Student() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {Object.keys(data[niveau]).map((sec) => (
-              <button
-                key={sec}
+  <button
+    key={sec}
+    onClick={() => {
+      setSection(sec);
+      setTypeDoc(null);
+    }}
                 onClick={() => setSection(sec)}
                 className="bg-slate-900 border border-slate-800 rounded-3xl p-8 text-left hover:scale-105 hover:border-blue-400 transition"
               >
