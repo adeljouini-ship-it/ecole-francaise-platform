@@ -227,7 +227,7 @@ export default function Student() {
                 <h3 className="text-2xl font-bold text-blue-400">{doc.nom}</h3>
               </button>
             ))}
-          </div>
+          </div> 
         </main>
       )}
 
