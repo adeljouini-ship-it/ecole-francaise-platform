@@ -25,11 +25,7 @@ const data = {
 };
 
 const sectionKeys = {
-  Mathématiques: "math",
-  Sciences: "science",
-  Informatique: "info",
-  "Économie & Gestion": "eco",
-  Technique: "technique",
+  Général: "general",
 };
 
 const documents = [
@@ -186,20 +182,21 @@ export default function Student() {
           <h2 className="text-5xl font-black mb-12">{niveau}</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {Object.keys(data[niveau]).map((sec) => (
+            {["Général"].map((sec) => (
   <button
     key={sec}
     onClick={() => {
       setSection(sec);
       setTypeDoc(null);
     }}
-                onClick={() => setSection(sec)}
-                className="bg-slate-900 border border-slate-800 rounded-3xl p-8 text-left hover:scale-105 hover:border-blue-400 transition"
-              >
-                <div className="text-6xl mb-5">📚</div>
-                <h3 className="text-3xl font-bold text-blue-400">{sec}</h3>
-              </button>
-            ))}
+    className="bg-slate-900 border border-slate-800 rounded-3xl p-8"
+  >
+    <div className="text-6xl mb-5">📚</div>
+    <h3 className="text-3xl font-bold text-blue-400">
+      Continuer
+    </h3>
+  </button>
+))}
           </div>
         </main>
       )}
