@@ -75,7 +75,7 @@ export default function Student() {
   );
 
   const getPdfUrl = (fileName) => {
-    const path = `${folderNiveau}/${}/${typeDoc}/${fileName}`;
+    const path = `${folderNiveau}/${typeDoc}/${fileName}`;
 
     const { data } = supabase.storage.from("pdfs").getPublicUrl(path);
 
