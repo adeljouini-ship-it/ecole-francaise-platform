@@ -49,7 +49,7 @@ export default function Student() {
     if (!niveau || !section || !typeDoc) return;
 
     const loadFiles = async () => {
-      const path = `${folderNiveau}/${folderSection}/${typeDoc}`;
+      const path = `${folderNiveau}/${typeDoc}`;
 
       const { data, error } = await supabase.storage.from("pdfs").list(path);
 
@@ -75,7 +75,7 @@ export default function Student() {
   );
 
   const getPdfUrl = (fileName) => {
-    const path = `${folderNiveau}/${folderSection}/${typeDoc}/${fileName}`;
+    const path = `${folderNiveau}/${}/${typeDoc}/${fileName}`;
 
     const { data } = supabase.storage.from("pdfs").getPublicUrl(path);
 
