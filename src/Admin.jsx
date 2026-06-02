@@ -37,9 +37,9 @@ export default function Admin() {
     setFiles(data || []);
   };
 
-  useEffect(() => {
-    loadFiles();
-  }, [niveau, section, typeDoc]);
+ useEffect(() => {
+  loadFiles();
+}, [niveau, typeDoc]);
 
   const handleFile = async (file) => {
     if (!file) return;
