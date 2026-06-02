@@ -3,7 +3,7 @@ import { supabase } from "./supabase";
 
 export default function Admin() {
   const [niveau, setNiveau] = useState("bac");
-  const [section, setSection] = useState("technique");
+ 
   const [typeDoc, setTypeDoc] = useState("cours");
   const [titre, setTitre] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ export default function Admin() {
       .replace(/[^a-z0-9-]/g, "");
   };
 
-  const folderPath = `${niveau}/${section}/${typeDoc}`;
+  const folderPath = `${niveau}/${typeDoc}`;
 
   const loadFiles = async () => {
     const { data, error } = await supabase.storage
@@ -135,20 +135,16 @@ export default function Admin() {
           <option value="1ere">1ère</option>
           <option value="2eme">2ème</option>
           <option value="3eme">3ème</option>
-          <option value="bac">Bac</option>
+          const niveaux = [
+  "5eme",
+  "4eme",
+  "3eme",
+  "1ere",
+  "terminale"
+];
         </select>
 
-        <select
-          value={section}
-          onChange={(e) => setSection(e.target.value)}
-          className="bg-slate-800 p-4 rounded-2xl text-xl"
-        >
-          <option value="math">Math</option>
-          <option value="science">Science</option>
-          <option value="info">Info</option>
-          <option value="eco">Économie</option>
-          <option value="technique">Technique</option>
-        </select>
+        
 
         <select
           value={typeDoc}
