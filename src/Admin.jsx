@@ -2,15 +2,25 @@ import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 
 export default function Admin() {
-  const [niveau, setNiveau] = useState("bac");
- 
+  const [niveau, setNiveau] = useState("5eme");
   const [typeDoc, setTypeDoc] = useState("cours");
   const [titre, setTitre] = useState("");
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState([]);
 
-  const cleanName = (text) => {
-    return text
+  const folderPath = `${niveau}/${typeDoc}`;
+
+  const loadFiles = async () => {
+    const { data } = await supabase.storage.from("pdfs").list(folderPath);
+    setFiles(data || []);
+  };
+
+  useEffect(() => {
+    loadFiles();
+  }, [niveau, typeDoc]);
+
+  const cleanName = (text) =>
+    text
       .toLowerCase()
       .trim()
       .replaceAll(" ", "-")
@@ -20,26 +30,6 @@ export default function Admin() {
       .replaceAll("à", "a")
       .replaceAll("ç", "c")
       .replace(/[^a-z0-9-]/g, "");
-  };
-
-  const folderPath = `${niveau}/${typeDoc}`;
-
-  const loadFiles = async () => {
-    const { data, error } = await supabase.storage
-      .from("pdfs")
-      .list(folderPath);
-
-    if (error) {
-      setFiles([]);
-      return;
-    }
-
-    setFiles(data || []);
-  };
-
- useEffect(() => {
-  loadFiles();
-}, [niveau, typeDoc]);
 
   const handleFile = async (file) => {
     if (!file) return;
@@ -68,7 +58,7 @@ export default function Admin() {
       return;
     }
 
-    alert("PDF envoyé avec succès : " + filePath);
+    alert("PDF envoyé avec succès");
     setTitre("");
     loadFiles();
   };
@@ -82,24 +72,9 @@ export default function Admin() {
   };
 
   const deleteFile = async (fileName) => {
-    const confirmDelete = window.confirm(
-      "Tu veux vraiment supprimer : " + fileName + " ?"
-    );
+    if (!confirm("Supprimer ce PDF ?")) return;
 
-    if (!confirmDelete) return;
-
-    const filePath = `${folderPath}/${fileName}`;
-
-    const { error } = await supabase.storage
-      .from("pdfs")
-      .remove([filePath]);
-
-    if (error) {
-      alert("Erreur suppression : " + error.message);
-      return;
-    }
-
-    alert("PDF supprimé : " + fileName);
+    await supabase.storage.from("pdfs").remove([`${folderPath}/${fileName}`]);
     loadFiles();
   };
 
@@ -118,7 +93,7 @@ export default function Admin() {
         <button
           onClick={async () => {
             await supabase.auth.signOut();
-            window.location.href = "/login";
+            window.location.href = "/?page=login";
           }}
           className="bg-red-600 px-6 py-3 rounded-2xl text-xl font-bold"
         >
@@ -132,19 +107,12 @@ export default function Admin() {
           onChange={(e) => setNiveau(e.target.value)}
           className="bg-slate-800 p-4 rounded-2xl text-xl"
         >
-          <option value="1ere">1ère</option>
-          <option value="2eme">2ème</option>
+          <option value="5eme">5ème</option>
+          <option value="4eme">4ème</option>
           <option value="3eme">3ème</option>
-          const niveaux = [
-  "5eme",
-  "4eme",
-  "3eme",
-  "1ere",
-  "terminale"
-];
+          <option value="1ere">1ère</option>
+          <option value="terminale">Terminale</option>
         </select>
-
-        
 
         <select
           value={typeDoc}
@@ -161,12 +129,12 @@ export default function Admin() {
       <input
         value={titre}
         onChange={(e) => setTitre(e.target.value)}
-        placeholder="Titre du document, exemple : Chapitre 1 - Nombres complexes"
+        placeholder="Titre du document"
         className="w-full bg-slate-800 p-4 rounded-2xl text-xl mb-6"
       />
 
-      <label className="block bg-blue-600 p-6 rounded-3xl text-2xl font-bold text-center cursor-pointer hover:scale-105 transition mb-10">
-        Ajouter le PDF dans : {niveau} / {section} / {typeDoc}
+      <label className="block bg-blue-600 p-6 rounded-3xl text-2xl font-bold text-center cursor-pointer mb-10">
+        Ajouter le PDF dans : {niveau} / {typeDoc}
         <input
           type="file"
           accept="application/pdf"
@@ -175,12 +143,10 @@ export default function Admin() {
         />
       </label>
 
-      {loading && (
-        <p className="text-blue-400 text-2xl mb-6">Upload en cours...</p>
-      )}
+      {loading && <p className="text-blue-400 text-2xl mb-6">Upload en cours...</p>}
 
       <h2 className="text-3xl font-bold mb-6">
-        PDF dans : {niveau} / {section} / {typeDoc}
+        PDF dans : {niveau} / {typeDoc}
       </h2>
 
       {files.length === 0 ? (
@@ -197,41 +163,14 @@ export default function Admin() {
               <div className="flex gap-3">
                 <button
                   onClick={() => openFile(file.name)}
-                  className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-xl font-bold"
+                  className="bg-blue-600 px-5 py-2 rounded-xl font-bold"
                 >
                   Ouvrir
                 </button>
-<button
-  onClick={async () => {
-    const nouveauNom = prompt(
-      "Nouveau nom du PDF :",
-      file.name.replace(".pdf", "")
-    );
 
-    if (!nouveauNom) return;
-
-    const ancienPath = `${folderPath}/${file.name}`;
-    const nouveauPath = `${folderPath}/${nouveauNom}.pdf`;
-
-    const { error } = await supabase.storage
-      .from("pdfs")
-      .move(ancienPath, nouveauPath);
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    alert("PDF renommé avec succès");
-    loadFiles();
-  }}
-  className="bg-yellow-600 hover:bg-yellow-700 px-5 py-2 rounded-xl font-bold"
->
-  Renommer
-</button>
                 <button
                   onClick={() => deleteFile(file.name)}
-                  className="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-xl font-bold"
+                  className="bg-red-600 px-5 py-2 rounded-xl font-bold"
                 >
                   Supprimer
                 </button>
